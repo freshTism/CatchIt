@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -21,7 +23,16 @@ public class Main extends Application {
                 Group root = new Group();
                 Scene scene = new Scene(root, WIDTH, HEIGHT, Color.MIDNIGHTBLUE);
 
-                createPlayground(root, WIDTH, HEIGHT);
+                Canvas canvas = new Canvas(WIDTH, HEIGHT);
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                root.getChildren().add(canvas);
+
+                createPlayground(gc, WIDTH, HEIGHT);
+
+                Text score = new Text(40, 460, "Score : 0");
+                score.setFont(Font.loadFont("file:resources/fonts/COOPBL.TTF", 30));
+                score.setFill(Color.BLACK);
+                root.getChildren().add(score);
 
                 Player player = new Player();
                 player.setX(WIDTH / 2);
@@ -37,15 +48,11 @@ public class Main extends Application {
         } // end method start(Stage)
 
 
-        private void createPlayground(Group root, double width, double height) {
+        private void createPlayground(GraphicsContext gc, double width, double height) {
 
                 final double RECTANGLES_WIDTH = 10;
                 final double RED_BLUE_LENTH = 150;
                 final double YELLOW_GREEN_LETH = 200;
-
-                Canvas canvas = new Canvas(width, height);
-                GraphicsContext gc = canvas.getGraphicsContext2D();
-                root.getChildren().add(canvas);
 
                 gc.setFill(Color.BLACK);
                 gc.setLineWidth(5);
@@ -66,8 +73,11 @@ public class Main extends Application {
         } // end method createPlayground
 
 
+
+
+
         public static void main(String[] args) {
                 launch(args);
         } // end method main
-    
+
 } // end class Main
