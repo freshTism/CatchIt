@@ -23,6 +23,8 @@ public class Main extends Application {
                 Group root = new Group();
                 Scene scene = new Scene(root, WIDTH, HEIGHT, Color.MIDNIGHTBLUE);
 
+                primaryStage.setTitle("Catch It");
+
                 Canvas canvas = new Canvas(WIDTH, HEIGHT);
                 GraphicsContext gc = canvas.getGraphicsContext2D();
                 root.getChildren().add(canvas);
