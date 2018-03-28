@@ -69,7 +69,7 @@ public class Main extends Application {
                                         public void handle(long now) {
 
                                         }
-                                }
+                                };
 
                         }
                 });
@@ -112,6 +112,46 @@ public class Main extends Application {
                 return randomRotate.nextDouble() * 360;
 
         } // end method getRandomRotate
+
+
+        private Color getRandomColor(Color currentColor) {
+
+                Random randomColor = new Random();
+                Color resultColor = currentColor;
+                switch (randomColor.nextInt(6) + 1) {
+
+                        case 1:         //Blue
+                                resultColor = Color.BLUE;
+                                break;
+                        case 2:
+                                resultColor = Color.YELLOW;
+                                break;
+                        case 3:
+                                resultColor = Color.GREEN;
+                                break;
+                        case 4:
+                                resultColor = Color.RED;
+                                break;
+                        case 5:
+                                resultColor = Color.PURPLE;
+                                break;
+                        case 6:
+                                resultColor = Color.GRAY;
+                                break;
+                        case 7:
+                                resultColor = Color.BLACK;
+                                break;
+                }
+
+                if (resultColor == currentColor) {
+
+                        getRandomColor(currentColor);
+
+                }
+
+                return resultColor;
+
+        } // end method getRandomColor
 
 
         public static void main(String[] args) {
