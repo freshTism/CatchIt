@@ -1,16 +1,27 @@
 package sample;
 
+import javafx.animation.*;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.CubicCurveTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
+import java.util.Random;
 
 public class Main extends Application {
 
@@ -19,6 +30,7 @@ public class Main extends Application {
 
                 final double WIDTH = 1000;
                 final double HEIGHT = 500;
+                Integer score = 0;
 
                 Group root = new Group();
                 Scene scene = new Scene(root, WIDTH, HEIGHT, Color.MIDNIGHTBLUE);
@@ -31,10 +43,10 @@ public class Main extends Application {
 
                 createPlayground(gc, WIDTH, HEIGHT);
 
-                Text score = new Text(40, 460, "Score : 0");
-                score.setFont(Font.loadFont("file:resources/fonts/COOPBL.TTF", 30));
-                score.setFill(Color.BLACK);
-                root.getChildren().add(score);
+                Text showScore = new Text(40, 460, "Score : " + score.toString());
+                showScore.setFont(Font.loadFont("file:resources/fonts/COOPBL.TTF", 30));
+                showScore.setFill(Color.BLACK);
+                root.getChildren().add(showScore);
 
                 Player player = new Player();
                 player.setX(WIDTH / 2);
@@ -42,6 +54,25 @@ public class Main extends Application {
                 root.getChildren().add(player.getNode());
 
 
+                player.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+
+                                AnimationTimer play = new AnimationTimer() {
+
+                                        double maxRadius = 75;
+                                        double maxVelocity = 800;
+
+
+
+                                        @Override
+                                        public void handle(long now) {
+
+                                        }
+                                }
+
+                        }
+                });
 
 
                 primaryStage.setScene(scene);
@@ -75,7 +106,12 @@ public class Main extends Application {
         } // end method createPlayground
 
 
+        private double getRandomRotate() {
 
+                Random randomRotate = new Random();
+                return randomRotate.nextDouble() * 360;
+
+        } // end method getRandomRotate
 
 
         public static void main(String[] args) {
