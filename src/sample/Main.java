@@ -2,20 +2,14 @@ package sample;
 
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.DepthTest;
-import javafx.scene.Group;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.CubicCurveTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -24,6 +18,8 @@ import javafx.util.Duration;
 import java.util.Random;
 
 public class Main extends Application {
+
+        Player player = new Player();
 
         @Override
         public void start(Stage primaryStage) throws Exception{
@@ -48,31 +44,48 @@ public class Main extends Application {
                 showScore.setFill(Color.BLACK);
                 root.getChildren().add(showScore);
 
-                Player player = new Player();
+
                 player.setX(WIDTH / 2);
                 player.setY(HEIGHT / 2);
-                root.getChildren().add(player.getNode());
+                root.getChildren().add(player.getPlayer());
 
 
-                player.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                player.getPlayer().setOnMouseClicked(new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
 
-                                AnimationTimer play = new AnimationTimer() {
 
-                                        double maxRadius = 75;
-                                        double maxVelocity = 800;
 
+                                final AnimationTimer play = new AnimationTimer() {
+
+                                        double rotate = getRandomRotate();
 
 
                                         @Override
                                         public void handle(long now) {
 
+                                                movePlayerBy(rotate);
+
                                         }
                                 };
+                                play.start();
+
+                                Timeline stopPlay = new Timeline();
+                                KeyFrame stopAnimationTimer = new KeyFrame(Duration.minutes(2), new EventHandler<ActionEvent>() {
+                                        @Override
+                                        public void handle(ActionEvent event) {
+                                                play.stop();
+                                        }
+                                });
+                                stopPlay.getKeyFrames().add(stopAnimationTimer);
+                                stopPlay.play();
+
 
                         }
+
                 });
+
+
 
 
                 primaryStage.setScene(scene);
@@ -120,7 +133,7 @@ public class Main extends Application {
                 Color resultColor = currentColor;
                 switch (randomColor.nextInt(6) + 1) {
 
-                        case 1:         //Blue
+                        case 1:
                                 resultColor = Color.BLUE;
                                 break;
                         case 2:
@@ -154,8 +167,17 @@ public class Main extends Application {
         } // end method getRandomColor
 
 
+        private void movePlayerBy(double rotate) {
+
+                player.setX(player.getX() + player.getVelocityX(rotate));
+                player.setY(player.getY() - player.getVelocityY(rotate));
+
+        } // end method movePlayerBy
+
+
         public static void main(String[] args) {
                 launch(args);
         } // end method main
+
 
 } // end class Main
