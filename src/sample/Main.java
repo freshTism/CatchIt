@@ -1,20 +1,23 @@
 package sample;
 
-import javafx.animation.*;
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.*;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.util.Random;
 
 public class Main extends Application {
@@ -44,49 +47,56 @@ public class Main extends Application {
                 showScore.setFill(Color.BLACK);
                 root.getChildren().add(showScore);
 
-
                 player.setX(WIDTH / 2);
                 player.setY(HEIGHT / 2);
                 root.getChildren().add(player.getPlayer());
+
+                final AnimationTimer play = new AnimationTimer() {
+                        double rotate = getRandomRotate();
+
+                        @Override
+                        public void handle(long now) {
+
+                                if(player.getY() == player.getRedius()) {
+                                        rotate = -1 * rotate;
+                                }
+
+                                player.getPlayer().setOnMouseClicked(new EventHandler<MouseEvent>() {
+                                        @Override
+                                        public void handle(MouseEvent event) {
+                                                MouseButton mouseButton = event.getButton();
+                                                if (mouseButton == MouseButton.PRIMARY) {
+                                                        player.setVelosityX(1.1);
+                                                        player.setVelocityY(1.1);
+                                                } else if (mouseButton == MouseButton.SECONDARY) {
+                                                        player.setVelosityX(0.9);
+                                                        player.setVelocityY(0.9);
+                                                }
+                                        }
+                                });
+
+                                movePlayerBy(rotate);
+                        }
+                };
+
+
+                final Timeline stopPlay = new Timeline();
+                KeyFrame stopAnimationTimer = new KeyFrame(Duration.minutes(2), new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                                play.stop();
+                        }
+                });
+                stopPlay.getKeyFrames().add(stopAnimationTimer);
 
 
                 player.getPlayer().setOnMouseClicked(new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
-
-
-
-                                final AnimationTimer play = new AnimationTimer() {
-
-                                        double rotate = getRandomRotate();
-
-
-                                        @Override
-                                        public void handle(long now) {
-
-                                                movePlayerBy(rotate);
-
-                                        }
-                                };
                                 play.start();
-
-                                Timeline stopPlay = new Timeline();
-                                KeyFrame stopAnimationTimer = new KeyFrame(Duration.minutes(2), new EventHandler<ActionEvent>() {
-                                        @Override
-                                        public void handle(ActionEvent event) {
-                                                play.stop();
-                                        }
-                                });
-                                stopPlay.getKeyFrames().add(stopAnimationTimer);
                                 stopPlay.play();
-
-
                         }
-
                 });
-
-
-
 
                 primaryStage.setScene(scene);
                 primaryStage.show();
@@ -132,7 +142,6 @@ public class Main extends Application {
                 Random randomColor = new Random();
                 Color resultColor = currentColor;
                 switch (randomColor.nextInt(6) + 1) {
-
                         case 1:
                                 resultColor = Color.BLUE;
                                 break;
@@ -157,9 +166,7 @@ public class Main extends Application {
                 }
 
                 if (resultColor == currentColor) {
-
                         getRandomColor(currentColor);
-
                 }
 
                 return resultColor;

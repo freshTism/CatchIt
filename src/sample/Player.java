@@ -12,6 +12,8 @@ public class Player extends Circle{
         final double MIN_VELOCITY = 2;
         private double velocity = MIN_VELOCITY;
         final double MAX_VELOCITY = 50;
+        double velosityX;
+        double velocityY;
 
         final double MIN_RADIUS = 50;
         private double redius = MIN_RADIUS;
@@ -30,6 +32,8 @@ public class Player extends Circle{
         public void setX(double x) { player.setTranslateX(x); }
         public void setY(double y) { player.setTranslateY(y); }
         public void setVelocity(double factor) { velocity *= factor; }
+        public void setVelosityX(double factor) { velosityX *= factor; }
+        public void setVelocityY(double factor) { velocityY *= factor; }
 
         public double getX() { return player.getTranslateX(); }
         public double getVelocity() { return velocity; }
