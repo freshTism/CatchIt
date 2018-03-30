@@ -57,25 +57,23 @@ public class Main extends Application {
                         @Override
                         public void handle(long now) {
 
+                                player.setVelocityX(rotate);
+                                player.setVelocityY(rotate);
+                                player.setVelocity();
+
                                 if(player.getY() == player.getRedius()) {
                                         rotate = -1 * rotate;
+                                        player.setVelocityX(rotate);
+                                        player.setVelocityY(rotate);
+                                        player.setVelocity();
                                 }
 
-                                player.getPlayer().setOnMouseClicked(new EventHandler<MouseEvent>() {
-                                        @Override
-                                        public void handle(MouseEvent event) {
-                                                MouseButton mouseButton = event.getButton();
-                                                if (mouseButton == MouseButton.PRIMARY) {
-                                                        player.setVelosityX(1.1);
-                                                        player.setVelocityY(1.1);
-                                                } else if (mouseButton == MouseButton.SECONDARY) {
-                                                        player.setVelosityX(0.9);
-                                                        player.setVelocityY(0.9);
-                                                }
-                                        }
-                                });
+                                player.movePlayer();
 
-                                movePlayerBy(rotate);
+
+
+
+
                         }
                 };
 
@@ -173,13 +171,6 @@ public class Main extends Application {
 
         } // end method getRandomColor
 
-
-        private void movePlayerBy(double rotate) {
-
-                player.setX(player.getX() + player.getVelocityX(rotate));
-                player.setY(player.getY() - player.getVelocityY(rotate));
-
-        } // end method movePlayerBy
 
 
         public static void main(String[] args) {
