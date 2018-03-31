@@ -19,11 +19,14 @@ public class Player extends Circle{
         private double redius = MIN_RADIUS;
         final double MAX_RADIUS = 75;
 
+        private Color color = Color.GRAY;
+
 
         public Player() {
-                player = new Circle(MIN_RADIUS, Color.WHITE);
-                player.setFill(Color.GRAY);
+                player = new Circle(MIN_RADIUS);
+                player.setFill(color);
         } //end constructor
+
 
 
         public void setX(double x) { player.setTranslateX(x); }
@@ -38,6 +41,15 @@ public class Player extends Circle{
         }
         public void setVelocityX(double rotate) { velocityX = velocity * Math.cos(Math.toRadians(rotate)); }
         public void setVelocityY(double rotate) { velocityY = velocity * Math.sin(Math.toRadians(rotate)); }
+        public void setRedius(double newRedius) {
+                if (newRedius <= MAX_RADIUS && newRedius >= MIN_RADIUS) {
+                        redius = newRedius;
+                }
+        }
+        public void setColor(Color newColor) {
+                color = newColor;
+                player.setFill(color);
+        }
 
         public double getX() { return player.getTranslateX(); }
         public double getVelocity() { return velocity; }
@@ -46,7 +58,7 @@ public class Player extends Circle{
         public double getRedius() { return redius; }
         public double getY() { return player.getTranslateY(); }
         public Circle getPlayer() { return player; }
-
+        public Color getColor() { return color; }
 
         public void movePlayer() {
                 player.setCenterX(player.getCenterX() + velocityX);

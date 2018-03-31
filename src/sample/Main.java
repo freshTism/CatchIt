@@ -22,17 +22,46 @@ import java.util.Random;
 
 public class Main extends Application {
 
-        Player player = new Player();
+        final double WIDTH = 1000;
+        final double HEIGHT = 500;
+        final double RECTANGLES_WIDTH = 10;
+        final double RED_BLUE_LENTH = 150;
+        final double YELLOW_GREEN_LETH = 200;
+        Player player = new Player();;
+        Integer score = 0;
+        Text showScore;
+        Timeline stopPlay;
+        double rotate;
+
+
+        AnimationTimer play = new AnimationTimer() {
+                boolean isFirstCall = true;
+
+                @Override
+                public void handle(long now) {
+
+                        if (isFirstCall) {
+                                rotate = getRandomRotate();
+                                player.setVelocityX(rotate);
+                                player.setVelocityY(rotate);
+                                player.setVelocity();
+                                setScore();
+                                showScore.setText("Score : " + score.toString());
+                                player.movePlayer();
+                                isFirstCall = false;
+                        } else {
+                                nextFrame();
+                        }
+                }
+        };
+
 
         @Override
         public void start(Stage primaryStage) throws Exception{
 
-                final double WIDTH = 1000;
-                final double HEIGHT = 500;
-                Integer score = 0;
 
                 Group root = new Group();
-                Scene scene = new Scene(root, WIDTH, HEIGHT, Color.MIDNIGHTBLUE);
+                final Scene scene = new Scene(root, WIDTH, HEIGHT, Color.MIDNIGHTBLUE);
 
                 primaryStage.setTitle("Catch It");
 
@@ -42,43 +71,18 @@ public class Main extends Application {
 
                 createPlayground(gc, WIDTH, HEIGHT);
 
-                Text showScore = new Text(40, 460, "Score : " + score.toString());
+                showScore = new Text(40, 460, "Score : " + score.toString());
                 showScore.setFont(Font.loadFont("file:resources/fonts/COOPBL.TTF", 30));
                 showScore.setFill(Color.BLACK);
                 root.getChildren().add(showScore);
 
-                player.setX(WIDTH / 2);
-                player.setY(HEIGHT / 2);
+
+                player.getPlayer().setCenterX(WIDTH / 2);
+                player.getPlayer().setCenterY(HEIGHT / 2);
                 root.getChildren().add(player.getPlayer());
 
-                final AnimationTimer play = new AnimationTimer() {
-                        double rotate = getRandomRotate();
 
-                        @Override
-                        public void handle(long now) {
-
-                                player.setVelocityX(rotate);
-                                player.setVelocityY(rotate);
-                                player.setVelocity();
-
-                                if(player.getY() == player.getRedius()) {
-                                        rotate = -1 * rotate;
-                                        player.setVelocityX(rotate);
-                                        player.setVelocityY(rotate);
-                                        player.setVelocity();
-                                }
-
-                                player.movePlayer();
-
-
-
-
-
-                        }
-                };
-
-
-                final Timeline stopPlay = new Timeline();
+                stopPlay = new Timeline();
                 KeyFrame stopAnimationTimer = new KeyFrame(Duration.minutes(2), new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
@@ -97,16 +101,13 @@ public class Main extends Application {
                 });
 
                 primaryStage.setScene(scene);
+                primaryStage.setResizable(false);
                 primaryStage.show();
 
         } // end method start(Stage)
 
 
         private void createPlayground(GraphicsContext gc, double width, double height) {
-
-                final double RECTANGLES_WIDTH = 10;
-                final double RED_BLUE_LENTH = 150;
-                final double YELLOW_GREEN_LETH = 200;
 
                 gc.setFill(Color.BLACK);
                 gc.setLineWidth(5);
@@ -135,7 +136,7 @@ public class Main extends Application {
         } // end method getRandomRotate
 
 
-        private Color getRandomColor(Color currentColor) {
+        private Color setRandomColor(Color currentColor) {
 
                 Random randomColor = new Random();
                 Color resultColor = currentColor;
@@ -164,12 +165,93 @@ public class Main extends Application {
                 }
 
                 if (resultColor == currentColor) {
-                        getRandomColor(currentColor);
+                        setRandomColor(currentColor);
                 }
+
+                player.setColor(resultColor);
 
                 return resultColor;
 
         } // end method getRandomColor
+
+
+        private void setScore() {
+                score += (int) player.getVelocity() / 10;
+        }
+
+
+        public void nextFrame() {
+
+                if(player.getPlayer().getCenterY() <= player.getRedius()) {
+
+                        rotate = -1 * rotate;
+
+                } else if(player.getPlayer().getCenterY() >= HEIGHT - player.getRedius()) {
+
+                        rotate = 360 - rotate;
+
+                } else if(player.getPlayer().getCenterX() <= player.getRedius()) {
+
+                        rotate = 180 - rotate;
+
+                } else if(player.getPlayer().getCenterX() >= WIDTH - player.getRedius()) {
+
+                        rotate = 180 - rotate;
+
+                }
+
+                if(player.getPlayer().getCenterX() >= (WIDTH - YELLOW_GREEN_LETH) / 2
+                        && player.getPlayer().getCenterX() <= WIDTH - (WIDTH - YELLOW_GREEN_LETH) / 2
+                        && player.getPlayer().getCenterY() >= player.getRedius()) {
+
+                        rotate = getRandomRotate();
+
+                } else if(player.getPlayer().getCenterX() >= (WIDTH - YELLOW_GREEN_LETH) / 2
+                        && player.getPlayer().getCenterX() <= WIDTH - (WIDTH - YELLOW_GREEN_LETH) / 2
+                        && player.getPlayer().getCenterY() >= HEIGHT - player.getRedius()) {
+
+                        setRandomColor(player.getColor());
+
+                } else if(player.getPlayer().getCenterY() >= (HEIGHT - RED_BLUE_LENTH) / 2
+                        && player.getPlayer().getCenterY() <= HEIGHT - (HEIGHT - RED_BLUE_LENTH) / 2
+                        && player.getPlayer().getCenterX() <= player.getRedius()) {
+
+                        player.setRedius(player.getRedius() * 1.5);
+
+                } else if(player.getPlayer().getCenterY() >= (HEIGHT - RED_BLUE_LENTH) / 2
+                        && player.getPlayer().getCenterY() <= HEIGHT - (HEIGHT - RED_BLUE_LENTH) / 2
+                        && player.getPlayer().getCenterX() >= WIDTH - player.getRedius()) {
+
+                        player.setRedius(player.getRedius() * 0.5);
+
+                }
+
+                player.getPlayer().setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                                MouseButton mouseButton = event.getButton();
+                                if (mouseButton == MouseButton.PRIMARY) {
+                                        player.velocityX *= 1.1;
+                                        player.velocityY *= 1.1;
+                                        setScore();
+                                        showScore.setText("Score : " + score.toString());
+                                } else if (mouseButton == MouseButton.SECONDARY) {
+                                        player.velocityX *= 0.9;
+                                        player.velocityY *= 0.9;
+                                        setScore();
+                                        showScore.setText("Score : " + score.toString());
+                                }
+                        }
+                });
+
+                player.setVelocityX(rotate);
+                player.setVelocityY(rotate);
+                player.setVelocity();
+
+
+                player.movePlayer();
+
+        }
 
 
 
