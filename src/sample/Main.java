@@ -61,7 +61,7 @@ public class Main extends Application {
 
 
                 Group root = new Group();
-                final Scene scene = new Scene(root, WIDTH, HEIGHT, Color.MIDNIGHTBLUE);
+                final Scene scene = new Scene(root, WIDTH, HEIGHT, Color.POWDERBLUE);
 
                 primaryStage.setTitle("Catch It");
 
@@ -136,7 +136,7 @@ public class Main extends Application {
         } // end method getRandomRotate
 
 
-        private Color setRandomColor(Color currentColor) {
+        private void setRandomColor(Color currentColor) {
 
                 Random randomColor = new Random();
                 Color resultColor = currentColor;
@@ -169,9 +169,6 @@ public class Main extends Application {
                 }
 
                 player.setColor(resultColor);
-
-                return resultColor;
-
         } // end method getRandomColor
 
 
@@ -182,49 +179,116 @@ public class Main extends Application {
 
         public void nextFrame() {
 
-                if(player.getPlayer().getCenterY() <= player.getRedius()) {
+                // Collision with entire the up border
+                if(player.getPlayer().getCenterY() <= player.getRedius()
+                        // Except (up left corner
+                        && (player.getPlayer().getCenterY() <= player.getRedius()
+                                || player.getPlayer().getCenterX() <= player.getRedius())
+                        // & up right corner)
+                        && (player.getPlayer().getCenterY() <= player.getRedius()
+                                || player.getPlayer().getCenterX() >= WIDTH - player.getRedius())) {
 
                         rotate = -1 * rotate;
 
-                } else if(player.getPlayer().getCenterY() >= HEIGHT - player.getRedius()) {
+                // Collision with entire the down border
+                } else if(player.getPlayer().getCenterY() >= HEIGHT - player.getRedius()
+                        // Except (down left corner
+                        && (player.getPlayer().getCenterY() >= HEIGHT - player.getRedius()
+                                || player.getPlayer().getCenterX() <= player.getRedius())
+                        // & down right corner)
+                        && (player.getPlayer().getCenterY() >= HEIGHT - player.getRedius()
+                                || player.getPlayer().getCenterX() >= WIDTH - player.getRedius())) {
 
-                        rotate = 360 - rotate;
+                        rotate = -1 * rotate;
 
-                } else if(player.getPlayer().getCenterX() <= player.getRedius()) {
+                // Collision with entire the left border
+                } else if(player.getPlayer().getCenterX() <= player.getRedius()
+                        // Except (up left corner
+                        && (player.getPlayer().getCenterY() <= player.getRedius()
+                                || player.getPlayer().getCenterX() <= player.getRedius())
+                        // & down left corner)
+                        && (player.getPlayer().getCenterY() >= HEIGHT - player.getRedius()
+                                || player.getPlayer().getCenterX() <= player.getRedius())) {
 
                         rotate = 180 - rotate;
 
-                } else if(player.getPlayer().getCenterX() >= WIDTH - player.getRedius()) {
+                // Collision with entire right border
+                } else if(player.getPlayer().getCenterX() >= WIDTH - player.getRedius()
+                        // Except (up right corner
+                        && (player.getPlayer().getCenterY() <= player.getRedius()
+                                || player.getPlayer().getCenterX() >= WIDTH - player.getRedius())
+                        // & down right corner)
+                        && (player.getPlayer().getCenterY() >= HEIGHT - player.getRedius()
+                                || player.getPlayer().getCenterX() >= WIDTH - player.getRedius())) {
 
                         rotate = 180 - rotate;
 
                 }
 
+                // Collision with up left corner
+                if(player.getPlayer().getCenterY() <= player.getRedius()
+                        && player.getPlayer().getCenterX() <= player.getRedius()) {
+
+                        rotate = -1 * Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
+
+                // Collision with up right corner
+                } else if(player.getPlayer().getCenterY() <= player.getRedius()
+                        && player.getPlayer().getCenterX() >= WIDTH - player.getRedius()) {
+
+                        rotate = 180 + Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
+
+                // Collision with down left corner
+                } else if(player.getPlayer().getCenterY() >= HEIGHT - player.getRedius()
+                        && player.getPlayer().getCenterX() <= player.getRedius()) {
+
+                        rotate = Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
+
+                // Collision with down right corner
+                } else if(player.getPlayer().getCenterY() >= HEIGHT - player.getRedius()
+                        && player.getPlayer().getCenterX() >= WIDTH - player.getRedius()) {
+
+                        rotate = 180 - Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
+
+                }
+
+
                 if(player.getPlayer().getCenterX() >= (WIDTH - YELLOW_GREEN_LETH) / 2
                         && player.getPlayer().getCenterX() <= WIDTH - (WIDTH - YELLOW_GREEN_LETH) / 2
-                        && player.getPlayer().getCenterY() >= player.getRedius()) {
+                        && player.getPlayer().getCenterY() <= player.getRedius()) {
 
-                        rotate = getRandomRotate();
+                        do {
+                                rotate = getRandomRotate();
+                        } while (rotate >= 180 && rotate <= 360);
 
-                } else if(player.getPlayer().getCenterX() >= (WIDTH - YELLOW_GREEN_LETH) / 2
+                } else
+                       if(player.getPlayer().getCenterX() >= (WIDTH - YELLOW_GREEN_LETH) / 2
                         && player.getPlayer().getCenterX() <= WIDTH - (WIDTH - YELLOW_GREEN_LETH) / 2
                         && player.getPlayer().getCenterY() >= HEIGHT - player.getRedius()) {
 
                         setRandomColor(player.getColor());
 
-                } else if(player.getPlayer().getCenterY() >= (HEIGHT - RED_BLUE_LENTH) / 2
-                        && player.getPlayer().getCenterY() <= HEIGHT - (HEIGHT - RED_BLUE_LENTH) / 2
-                        && player.getPlayer().getCenterX() <= player.getRedius()) {
-
-                        player.setRedius(player.getRedius() * 1.5);
-
-                } else if(player.getPlayer().getCenterY() >= (HEIGHT - RED_BLUE_LENTH) / 2
-                        && player.getPlayer().getCenterY() <= HEIGHT - (HEIGHT - RED_BLUE_LENTH) / 2
-                        && player.getPlayer().getCenterX() >= WIDTH - player.getRedius()) {
-
-                        player.setRedius(player.getRedius() * 0.5);
-
                 }
+//                  else if(player.getPlayer().getCenterY() >= (HEIGHT - RED_BLUE_LENTH) / 2
+//                        && player.getPlayer().getCenterY() <= HEIGHT - (HEIGHT - RED_BLUE_LENTH) / 2
+//                        && player.getPlayer().getCenterX() <= player.getRedius()) {
+//
+//                        player.getPlayer().setScaleX(1.5);
+//                        player.getPlayer().setScaleY(1.5);
+//                        player.setRedius(player.getRedius() * 1.5);
+//                        System.out.format("Radius : %f\n", player.getRedius());
+//
+//                } else if(player.getPlayer().getCenterY() >= (HEIGHT - RED_BLUE_LENTH) / 2
+//                        && player.getPlayer().getCenterY() <= HEIGHT - (HEIGHT - RED_BLUE_LENTH) / 2
+//                        && player.getPlayer().getCenterX() >= WIDTH - player.getRedius()) {
+//
+//                        player.getPlayer().setScaleX(0.5);
+//                        player.getPlayer().setScaleY(0.5);
+//                        player.setRedius(player.getRedius() * 0.5);
+//                        System.out.format("Radius : %f\n", player.getRedius());
+//
+//                }
+
+
 
                 player.getPlayer().setOnMouseClicked(new EventHandler<MouseEvent>() {
                         @Override
