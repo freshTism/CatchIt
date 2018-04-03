@@ -9,9 +9,9 @@ public class Player extends Circle{
 
         Circle player;
 
-        final double MIN_VELOCITY = 10;
+        final double MIN_VELOCITY = 2;
         private double velocity = MIN_VELOCITY;
-        final double MAX_VELOCITY = 50;
+        final double MAX_VELOCITY = 25;
         double velocityX;
         double velocityY;
 
@@ -29,8 +29,8 @@ public class Player extends Circle{
 
 
 
-        public void setX(double x) { player.setTranslateX(x); }
-        public void setY(double y) { player.setTranslateY(y); }
+        public void setX(double x) { player.setCenterX(x); }
+        public void setY(double y) { player.setCenterY(y); }
         public void setVelocity() {
                 velocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
                 if (velocity > MAX_VELOCITY) {
@@ -46,12 +46,12 @@ public class Player extends Circle{
                 player.setFill(color);
         }
 
-        public double getX() { return player.getTranslateX(); }
+        public double getX() { return player.getCenterX(); }
+        public double getY() { return player.getCenterY(); }
         public double getVelocity() { return velocity; }
         public double getVelocityX() { return velocityX; }
         public double getVelocityY() { return  velocityY; }
         public double getCurrentRedius() { return player.getRadius(); }
-        public double getY() { return player.getTranslateY(); }
         public Circle getPlayer() { return player; }
         public Color getColor() { return color; }
 
