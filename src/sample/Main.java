@@ -24,7 +24,7 @@ public class Main extends Application {
 
         final double WIDTH = 1000;
         final double HEIGHT = 500;
-        final double RECTANGLES_WIDTH = 10;
+        final double RECTANGLES_WIDTH = 7;
         final double RED_BLUE_LENTH = 150;
         final double YELLOW_GREEN_LETH = 200;
         Player player = new Player();;
@@ -231,25 +231,25 @@ public class Main extends Application {
                 if(player.getPlayer().getCenterY() <= player.getCurrentRedius()
                         && player.getPlayer().getCenterX() <= player.getCurrentRedius()) {
 
-                        rotate = -1 * Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
+                        rotate = Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
 
                 // Collision with up right corner
                 } else if(player.getPlayer().getCenterY() <= player.getCurrentRedius()
                         && player.getPlayer().getCenterX() >= WIDTH - player.getCurrentRedius()) {
 
-                        rotate = 180 + Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
+                        rotate = 180 - Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
 
                 // Collision with down left corner
                 } else if(player.getPlayer().getCenterY() >= HEIGHT - player.getCurrentRedius()
                         && player.getPlayer().getCenterX() <= player.getCurrentRedius()) {
 
-                        rotate = Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
+                        rotate = 360 - Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
 
                 // Collision with down right corner
                 } else if(player.getPlayer().getCenterY() >= HEIGHT - player.getCurrentRedius()
                         && player.getPlayer().getCenterX() >= WIDTH - player.getCurrentRedius()) {
 
-                        rotate = 180 - Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
+                        rotate = 180 + Math.toDegrees(Math.atan2(HEIGHT, WIDTH));
 
                 }
 
