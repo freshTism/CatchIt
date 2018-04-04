@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -16,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.util.Random;
@@ -32,6 +34,8 @@ public class Main extends Application {
         Text showScore;
         Timeline stopPlay;
         double rotate;
+        FadeTransition fadeAtTheEndOfGame;
+        Text showFinalScore;
 
 
         AnimationTimer play = new AnimationTimer() {
@@ -89,6 +93,26 @@ public class Main extends Application {
                         @Override
                         public void handle(ActionEvent event) {
                                 play.stop();
+                        }
+                });
+                stopPlay.setOnFinished(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                                fadeAtTheEndOfGame = new FadeTransition(Duration.millis(1000), canvas);
+                                fadeAtTheEndOfGame.setFromValue(1.5);
+                                fadeAtTheEndOfGame.setToValue(0.3);
+                                fadeAtTheEndOfGame.play();
+
+                                fadeAtTheEndOfGame = new FadeTransition(Duration.millis(1000), player.getPlayer());
+                                fadeAtTheEndOfGame.setFromValue(1.5);
+                                fadeAtTheEndOfGame.setToValue(0.3);
+                                fadeAtTheEndOfGame.play();
+
+                                showFinalScore = new Text(WIDTH / 2 - 230, HEIGHT / 2, "Your Score : " + score.toString());
+                                showFinalScore.setFont(Font.loadFont("file:resources/fonts/COOPBL.TTF", 60));
+                                showFinalScore.setFill(Color.BLACK);
+                                root.getChildren().removeAll(showScore, player.getPlayer());
+                                root.getChildren().add(showFinalScore);
                         }
                 });
                 stopPlay.getKeyFrames().add(stopAnimationTimer);
@@ -322,17 +346,12 @@ public class Main extends Application {
                 player.setVelocityX(rotate);
                 player.setVelocityY(rotate);
                 player.setVelocity();
-
-
                 player.movePlayer();
-
         }
-
 
 
         public static void main(String[] args) {
                 launch(args);
         } // end method main
-
 
 } // end class Main
