@@ -36,6 +36,7 @@ public class Main extends Application {
         double rotate;
         FadeTransition fadeAtTheEndOfGame;
         Text showFinalScore;
+        enum AllowedColors {blue, yellow, green, red, purple, gray, black}
 
 
         AnimationTimer play = new AnimationTimer() {
@@ -55,8 +56,7 @@ public class Main extends Application {
                                 player.movePlayer();
                                 isFirstCall = false;
                         } else {
-                                double dt = (double)(now - previousT) / 1_000_000_000.0;
-                                nextFrame(dt);
+                                nextFrame();
                         }
                 }
         };
@@ -167,26 +167,30 @@ public class Main extends Application {
 
                 Random randomColor = new Random();
                 Color resultColor = null;
-                switch (randomColor.nextInt(6) + 1) {
-                        case 1:
+
+                AllowedColors color;
+                color = AllowedColors.values()[randomColor.nextInt(7)];
+
+                switch (color) {
+                        case blue:
                                 resultColor = Color.BLUE;
                                 break;
-                        case 2:
+                        case yellow:
                                 resultColor = Color.YELLOW;
                                 break;
-                        case 3:
+                        case green:
                                 resultColor = Color.GREEN;
                                 break;
-                        case 4:
+                        case red:
                                 resultColor = Color.RED;
                                 break;
-                        case 5:
+                        case purple:
                                 resultColor = Color.PURPLE;
                                 break;
-                        case 6:
+                        case gray:
                                 resultColor = Color.GRAY;
                                 break;
-                        case 7:
+                        case black:
                                 resultColor = Color.BLACK;
                                 break;
                 }
@@ -204,7 +208,7 @@ public class Main extends Application {
         }
 
 
-        public void nextFrame(double dt) {
+        public void nextFrame() {
 
                 // Collision with entire the up border
                 if(player.getY() <= player.getCurrentRedius()
@@ -215,7 +219,7 @@ public class Main extends Application {
                         && (player.getY() <= player.getCurrentRedius()
                                 || player.getX() >= WIDTH - player.getCurrentRedius())) {
 
-                        rotate = -1 * rotate;
+                        rotate = 360 - rotate;
 
                 // Collision with entire the down border
                 } else if(player.getY() >= HEIGHT - player.getCurrentRedius()
@@ -226,7 +230,7 @@ public class Main extends Application {
                         && (player.getY() >= HEIGHT - player.getCurrentRedius()
                                 || player.getX() >= WIDTH - player.getCurrentRedius())) {
 
-                        rotate = -1 * rotate;
+                        rotate = 360 - rotate;
 
                 // Collision with entire the left border
                 } else if(player.getX() <= player.getCurrentRedius()
@@ -287,7 +291,7 @@ public class Main extends Application {
 
                         do {
                                 rotate = getRandomRotate();
-                        } while (rotate >= 170 && rotate <= 350);
+                        } while (rotate >= 180 && rotate <= 360);
 
                 // Collision with green border
                 } else if(player.getX() >= (WIDTH - YELLOW_GREEN_LETH) / 2
