@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_catchit" default="compile.module.catchit">
+  <dirname property="module.catchit.basedir" file="${ant.file.module_catchit}"/>
+  
+  <property name="module.jdk.home.catchit" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.catchit" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.catchit" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.catchit" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="catchit.output.dir" value="${module.catchit.basedir}/out/production/CatchIt"/>
+  <property name="catchit.testoutput.dir" value="${module.catchit.basedir}/out/test/CatchIt"/>
+  
+  <path id="catchit.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="catchit.module.production.classpath">
+    <path refid="${module.jdk.classpath.catchit}"/>
+  </path>
+  
+  <path id="catchit.runtime.production.module.classpath">
+    <pathelement location="${catchit.output.dir}"/>
+  </path>
+  
+  <path id="catchit.module.classpath">
+    <path refid="${module.jdk.classpath.catchit}"/>
+    <pathelement location="${catchit.output.dir}"/>
+  </path>
+  
+  <path id="catchit.runtime.module.classpath">
+    <pathelement location="${catchit.testoutput.dir}"/>
+    <pathelement location="${catchit.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.catchit">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.catchit">
+    <patternset refid="excluded.from.module.catchit"/>
+  </patternset>
+  
+  <path id="catchit.module.sourcepath">
+    <dirset dir="${module.catchit.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.catchit" depends="compile.module.catchit.production,compile.module.catchit.tests" description="Compile module CatchIt"/>
+  
+  <target name="compile.module.catchit.production" depends="register.custom.compilers" description="Compile module CatchIt; production classes">
+    <mkdir dir="${catchit.output.dir}"/>
+    <javac2 destdir="${catchit.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.catchit}/javac">
+      <compilerarg line="${compiler.args.catchit}"/>
+      <bootclasspath refid="catchit.module.bootclasspath"/>
+      <classpath refid="catchit.module.production.classpath"/>
+      <src refid="catchit.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.catchit"/>
+    </javac2>
+    
+    <copy todir="${catchit.output.dir}">
+      <fileset dir="${module.catchit.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.catchit.tests" depends="register.custom.compilers,compile.module.catchit.production" description="compile module CatchIt; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.catchit" description="cleanup module">
+    <delete dir="${catchit.output.dir}"/>
+    <delete dir="${catchit.testoutput.dir}"/>
+  </target>
+</project>

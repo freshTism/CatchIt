@@ -29,7 +29,7 @@ public class Main extends Application {
         final double RECTANGLES_WIDTH = 7;
         final double RED_BLUE_LENTH = 150;
         final double YELLOW_GREEN_LETH = 200;
-        Player player = new Player();;
+        Player player = new Player();
         Integer score = 0;
         Text showScore;
         Timeline stopPlay;
@@ -78,7 +78,7 @@ public class Main extends Application {
                 createPlayground(gc, WIDTH, HEIGHT);
 
                 showScore = new Text(40, 460, "Score : " + score.toString());
-                showScore.setFont(Font.loadFont("file:resources/fonts/COOPBL.TTF", 30));
+                showScore.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/fonts/COOPBL.TTF"), 30));
                 showScore.setFill(Color.BLACK);
                 root.getChildren().add(showScore);
 
@@ -109,7 +109,7 @@ public class Main extends Application {
                                 fadeAtTheEndOfGame.play();
 
                                 showFinalScore = new Text(WIDTH / 2 - 230, HEIGHT / 2, "Your Score : " + score.toString());
-                                showFinalScore.setFont(Font.loadFont("file:resources/fonts/COOPBL.TTF", 60));
+                                showFinalScore.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/fonts/COOPBL.TTF"), 60));
                                 showFinalScore.setFill(Color.BLACK);
                                 root.getChildren().removeAll(showScore, player.getPlayer());
                                 root.getChildren().add(showFinalScore);
@@ -170,6 +170,7 @@ public class Main extends Application {
 
                 AllowedColors color;
                 color = AllowedColors.values()[randomColor.nextInt(7)];
+
 
                 switch (color) {
                         case blue:
